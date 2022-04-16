@@ -1,5 +1,8 @@
 import { combineReducers } from "redux";
+import elementList from "./elementListReducer";
 
-const rootReducer = combineReducers({});
+const reducer = combineReducers({
+  elementList: elementList,
+});
 
-export default rootReducer;
+export default reducer;
