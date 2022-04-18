@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
   error: false,
   elements: [],
+  elementSecret: {},
 };
 
 export default function elementList(state = initialState, action) {
@@ -19,6 +20,8 @@ export default function elementList(state = initialState, action) {
       };
     case typeName.LOADED_FAILURE:
       return { ...state, loading: false, error: true };
+    case typeName.SET_SECRET_ELEMENT:
+      return { ...state, elementSecret: action.payload };
     default:
       return state;
   }
