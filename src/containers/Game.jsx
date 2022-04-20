@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Input, Spinner } from "reactstrap";
-import { setCards, setSecretElement } from "../actions/elementListActions";
+import { Alert, Input, Spinner } from "reactstrap";
+import { setCards, setSecretElement } from "../actions/elementActions";
 import Phrase from "../components/Phrase";
 
-const Game = ({ loading, error, elements, elementSecret, setCards }) => {
+const Game = ({ loading, error, elements, secretElement, setCards }) => {
   const params = useParams();
   const dispatch = useDispatch();
-  const [word, setWord] = useState("");
+  const [phrase, setPhrase] = useState("");
+  const comparePhrase = () => {};
 
   useEffect(() => {
     if (!loading && !elements.length && !error) {
@@ -20,47 +21,78 @@ const Game = ({ loading, error, elements, elementSecret, setCards }) => {
           break;
       }
     }
-    if (elements.length && !elementSecret.id) {
+    if (elements.length && !secretElement.id) {
       dispatch(
         setSecretElement(elements[Math.floor(Math.random() * elements.length)])
       );
     }
-  }, [dispatch, loading, elements, elementSecret, error, setCards, params]);
+  }, [dispatch, loading, elements, secretElement, error, setCards, params]);
 
-  return (
-    <>
-      {loading ? (
+  const isValidPhrase = (p) => {
+    return (
+      p.length <= secretElement.name?.length &&
+      p.split(" ").length <= secretElement.name?.split(" ").length
+    );
+  };
+
+  const renderEvents = () => {
+    if (loading) {
+      return (
         <Spinner
-          color="dark"
-          style={{ position: "absolute", top: "50%", left: "50%" }}>
+          color="secondary"
+          type="grow"
+          className="text-center"
+          style={{ position: "absolute", left: "50%", top: "50%" }}>
           Loading...
         </Spinner>
-      ) : (
-        <>
-          {elementSecret.name && word === "" ? (
-            <Phrase length={elementSecret.name.length} />
-          ) : (
-            <Phrase value={word} length={elementSecret.name?.length} />
-          )}
-          <Input
-            value={word}
-            onChange={(event) => {
-              if (event.target.value.length <= elementSecret.name?.length) {
-                setWord(event.target.value);
-              }
-            }}
-          />
-        </>
-      )}
-    </>
+      );
+    }
+    if (error) {
+      return <Alert color="danger">Error</Alert>;
+    }
+  };
+
+  const renderTable = () => {
+    if (secretElement?.id)
+      return (
+        <div className="pt-2">
+          {[...Array(parseInt(params.attempts)).keys()].map((index) => (
+            <Phrase
+              key={index}
+              value={phrase}
+              length={secretElement.name?.length}
+            />
+          ))}
+        </div>
+      );
+  };
+  return (
+    <div className="py-3 mx-auto">
+      <Input
+        className="mt-2"
+        value={phrase}
+        onChange={(event) => {
+          if (isValidPhrase(event.target.value)) {
+            setPhrase(event.target.value);
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            comparePhrase();
+          }
+        }}
+      />
+      {renderEvents()}
+      {renderTable()}
+    </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  loading: state.elementList.loading,
-  error: state.elementList.error,
-  elements: state.elementList.elements,
-  elementSecret: state.elementList.elementSecret,
+  loading: state.element.loading,
+  error: state.element.error,
+  elements: state.element.list,
+  secretElement: state.element.secret,
 });
 
 const mapDispatchToProps = {

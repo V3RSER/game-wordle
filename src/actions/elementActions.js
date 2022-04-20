@@ -19,9 +19,7 @@ export const setCards = () => async (dispatch) => {
   dispatch(loading());
   try {
     await crStreaming.getCards().then(function (response) {
-      dispatch(
-        loadedSuccess({ elementList: response.data.items, redirect: null })
-      );
+      dispatch(loadedSuccess({ list: response.data.items, redirect: null }));
     });
   } catch (error) {
     dispatch(loadedFailure());

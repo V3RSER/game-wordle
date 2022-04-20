@@ -6,10 +6,13 @@ function App() {
   return (
     <BrowserRouter>
       {/* <Header /> */}
-      <div className="container">
+      <div className="cover-container d-flex h-100 mx-auto flex-column">
         <Routes>
           <Route path="/game-wordle/" element={<Home />} />
-          <Route path="/game-wordle/:category" element={<Game />} />
+          <Route
+            path="/game-wordle/:category/:length/:attempts"
+            element={<Game />}
+          />
         </Routes>
       </div>
     </BrowserRouter>

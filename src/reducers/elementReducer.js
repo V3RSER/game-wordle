@@ -1,27 +1,27 @@
-import * as typeName from "../actions/elementListActions";
+import * as typeName from "../actions/elementActions";
 
 const initialState = {
   loading: false,
   error: false,
-  elements: [],
-  elementSecret: {},
+  list: [],
+  secret: {},
 };
 
-export default function elementList(state = initialState, action) {
+export default function element(state = initialState, action) {
   switch (action.type) {
     case typeName.LOADING:
       return { ...state, loading: true };
     case typeName.LOADED_SUCCESS:
       return {
         ...state,
-        elements: action.payload.elementList,
+        list: action.payload.list,
         loading: false,
         error: false,
       };
     case typeName.LOADED_FAILURE:
       return { ...state, loading: false, error: true };
     case typeName.SET_SECRET_ELEMENT:
-      return { ...state, elementSecret: action.payload };
+      return { ...state, secret: action.payload };
     default:
       return state;
   }

@@ -1,18 +1,19 @@
 import React from "react";
-import { Table } from "reactstrap";
-import Letter from "./Letter";
-const Phrase = ({ value = "", length }) => {
+
+const Phrase = ({ value = "", length = 1 }) => {
   return (
     <>
-      <Table bordered responsive size="">
-        <tbody>
-          <tr>
-            {[...Array(length).keys()].map((index) => (
-              <Letter key={index} value={value.charAt(index)} />
-            ))}
-          </tr>
-        </tbody>
-      </Table>
+      <div
+        className="phrase"
+        style={{
+          gridTemplateColumns: `repeat(${length}, minmax(0, 1fr))`,
+        }}>
+        {[...Array(length).keys()].map((index) => (
+          <h1 key={index} className="letter">
+            {value.charAt(index).toUpperCase()}
+          </h1>
+        ))}
+      </div>
     </>
   );
 };

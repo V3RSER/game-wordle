@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 import reducer from "./reducers/rootReducer";
+import "./assets/css/index.css";
 
 import { composeWithDevTools } from "redux-devtools-extension";
 
