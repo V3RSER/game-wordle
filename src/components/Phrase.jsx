@@ -1,6 +1,7 @@
 import React from "react";
 
-const Phrase = ({ value = "", length = 1 }) => {
+const Phrase = ({ letters = [{ value: "", color: "" }], length = 1 }) => {
+  console.log(letters);
   return (
     <>
       <div
@@ -10,7 +11,7 @@ const Phrase = ({ value = "", length = 1 }) => {
         }}>
         {[...Array(length).keys()].map((index) => (
           <h1 key={index} className="letter">
-            {value.charAt(index).toUpperCase()}
+            {letters[index]?.value.toUpperCase()}
           </h1>
         ))}
       </div>

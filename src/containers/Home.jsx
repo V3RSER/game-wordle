@@ -28,8 +28,8 @@ const Home = () => {
               setWordSource(event.target.value);
             }}>
             <option value="cr">Clash Royale</option>
-            <option value="dictionary">Diccionario</option>
-            <option value="valorant">Valorant</option>
+            {/* <option value="dictionary">Diccionario</option> */}
+            {/* <option value="valorant">Valorant</option> */}
           </Input>
         </FormGroup>
         <Label>Longitud de palabra</Label>

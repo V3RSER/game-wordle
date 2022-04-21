@@ -8,8 +8,15 @@ import Phrase from "../components/Phrase";
 const Game = ({ loading, error, elements, secretElement, setCards }) => {
   const params = useParams();
   const dispatch = useDispatch();
-  const [phrase, setPhrase] = useState("");
-  const comparePhrase = () => {};
+  const [inputPhrase, setInputPhrase] = useState({
+    value: "",
+    index: 0,
+  });
+  const [phrases, setPhrases] = useState(
+    [...Array(parseInt(params.attempts)).keys()].map(() => ({
+      letters: [],
+    }))
+  );
 
   useEffect(() => {
     if (!loading && !elements.length && !error) {
@@ -28,11 +35,17 @@ const Game = ({ loading, error, elements, secretElement, setCards }) => {
     }
   }, [dispatch, loading, elements, secretElement, error, setCards, params]);
 
-  const isValidPhrase = (p) => {
+  const isValidInputPhrase = (p) => {
     return (
       p.length <= secretElement.name?.length &&
       p.split(" ").length <= secretElement.name?.split(" ").length
     );
+  };
+
+  const comparePhrase = () => {
+    if (inputPhrase.value.length === secretElement.name.length) {
+      setInputPhrase({ value: "", index: ++inputPhrase.index });
+    }
   };
 
   const renderEvents = () => {
@@ -56,24 +69,33 @@ const Game = ({ loading, error, elements, secretElement, setCards }) => {
     if (secretElement?.id)
       return (
         <div className="pt-2">
-          {[...Array(parseInt(params.attempts)).keys()].map((index) => (
+          {phrases.map((p, index) => (
             <Phrase
               key={index}
-              value={phrase}
+              letters={p.letters}
               length={secretElement.name?.length}
             />
           ))}
         </div>
       );
   };
+
   return (
     <div className="py-3 mx-auto">
       <Input
         className="mt-2"
-        value={phrase}
+        value={inputPhrase.value}
         onChange={(event) => {
-          if (isValidPhrase(event.target.value)) {
-            setPhrase(event.target.value);
+          if (isValidInputPhrase(event.target.value)) {
+            setInputPhrase({
+              value: event.target.value,
+              index: inputPhrase.index,
+            });
+            phrases[inputPhrase.index] = {
+              letters: Array.from(event.target.value).map((letter) => ({
+                value: letter,
+              })),
+            };
           }
         }}
         onKeyDown={(event) => {
