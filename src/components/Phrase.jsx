@@ -1,7 +1,6 @@
 import React from "react";
 
 const Phrase = ({ letters = [{ value: "", color: "" }], length = 1 }) => {
-  console.log(letters);
   return (
     <>
       <div
@@ -10,7 +9,11 @@ const Phrase = ({ letters = [{ value: "", color: "" }], length = 1 }) => {
           gridTemplateColumns: `repeat(${length}, minmax(0, 1fr))`,
         }}>
         {[...Array(length).keys()].map((index) => (
-          <h1 key={index} className="letter">
+          <h1
+            key={index}
+            className={`letter ${
+              letters[index]?.color ? letters[index].color : "white"
+            }`}>
             {letters[index]?.value.toUpperCase()}
           </h1>
         ))}
