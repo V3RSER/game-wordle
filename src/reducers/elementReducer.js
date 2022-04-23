@@ -21,7 +21,15 @@ export default function element(state = initialState, action) {
     case typeName.LOADED_FAILURE:
       return { ...state, loading: false, error: true };
     case typeName.SET_SECRET_ELEMENT:
-      return { ...state, secret: action.payload };
+      return {
+        ...state,
+        secret: action.payload,
+      };
+    case typeName.SET_ELEMENT_LIST:
+      return {
+        ...state,
+        list: action.payload,
+      };
     default:
       return state;
   }

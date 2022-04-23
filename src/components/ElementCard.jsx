@@ -15,13 +15,18 @@ import { setSecretElement } from "../actions/elementActions";
 const ElementCard = ({ element }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   return (
     <Card className="element-card">
       <CardImg alt={element.name} src={element.img} top width="100%" />
       <CardBody>
         <CardTitle tag="h3">{element.name.toUpperCase()}</CardTitle>
         <CardSubtitle className="mb-2 text-muted" tag="h6"></CardSubtitle>
-        <CardText>{element.description}</CardText>
+        <CardText>
+          {element.description.length > 270
+            ? element.description.length.substring(0, 270) + "..."
+            : element.description}
+        </CardText>
         <Button
           color="success"
           block

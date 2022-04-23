@@ -6,6 +6,7 @@ export const LOADED_SUCCESS = "LOADED_SUCCESS";
 export const LOADED_FAILURE = "LOADED_FAILURE";
 
 export const SET_SECRET_ELEMENT = "SET_SECRET_ELEMENT";
+export const SET_ELEMENT_LIST = "SET_ELEMENT_LIST";
 
 export const loading = () => ({ type: LOADING });
 
@@ -70,5 +71,10 @@ export const setAgents = () => async (dispatch) => {
 
 export const setSecretElement = (payload) => ({
   type: SET_SECRET_ELEMENT,
+  payload,
+});
+
+export const setElementList = (payload) => ({
+  type: SET_ELEMENT_LIST,
   payload,
 });

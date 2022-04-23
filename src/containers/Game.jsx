@@ -1,21 +1,21 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRotateRight,
-  faCoffee,
-  faPaperclip,
-  faPaperPlane,
-} from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Alert, Button, Input, InputGroup, Spinner } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowRotateRight,
+  faPaperPlane,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   setCards,
   setSecretElement,
   setAgents,
+  setElementList,
 } from "../actions/elementActions";
 import ElementCard from "../components/ElementCard";
-import Phrase from "../components/Phrase";
+import Defeat from "../components/Defeat";
+import Grid from "../components/Grid";
 
 const Game = ({
   loading,
@@ -25,6 +25,7 @@ const Game = ({
   setCards,
   setAgents,
   setSecretElement,
+  setElementList,
 }) => {
   const params = useParams();
   const dispatch = useDispatch();
@@ -41,27 +42,31 @@ const Game = ({
   const [defeat, setDefeat] = useState(false);
 
   useEffect(() => {
-    if (!loading && !elements.length && !error) {
-      switch (params.category) {
-        case "cr":
-          setCards();
-          break;
-        case "valorant":
-          setAgents();
-          break;
-        default:
-          break;
-      }
-    }
-  }, [dispatch, loading, elements, error, setCards, setAgents, params]);
+    return () => {
+      dispatch(setSecretElement({}));
+      dispatch(setElementList([]));
+    };
+  }, [dispatch, setElementList, setSecretElement]);
 
   useEffect(() => {
-    if (elements.length && !secretElement?.id) {
+    switch (params.category) {
+      case "cr":
+        setCards();
+        break;
+      case "valorant":
+        setAgents();
+        break;
+      default:
+        break;
+    }
+  }, [params.category, setAgents, setCards]);
+
+  useEffect(() => {
+    if (elements.length && !loading && !secretElement?.id)
       dispatch(
         setSecretElement(elements[Math.floor(Math.random() * elements.length)])
       );
-    }
-  }, [dispatch, elements, secretElement, setSecretElement]);
+  }, [dispatch, elements, loading, secretElement?.id, setSecretElement]);
 
   const isValidInputPhrase = (p) => {
     return (
@@ -72,20 +77,30 @@ const Game = ({
 
   const comprobateVictory = () => {
     if (inputPhrase.value.length === secretElement.name.length && !defeat) {
-      phrases[inputPhrase.index] = {
-        letters: phrases[inputPhrase.index].letters.map((letter, index) => ({
-          value: letter.value,
-          color:
-            Array.from(secretElement.name.toUpperCase())[index] ===
-            letter.value.toUpperCase()
-              ? "green"
-              : secretElement.name
-                  .toUpperCase()
-                  .includes(letter.value.toUpperCase())
-              ? "yellow"
-              : "grey",
-        })),
-      };
+      setPhrases(
+        phrases.map((prhase, idx) => {
+          if (idx === inputPhrase.index)
+            return {
+              letters: phrases[inputPhrase.index].letters.map(
+                (letter, index) => ({
+                  value: letter.value,
+                  color:
+                    Array.from(secretElement.name.toUpperCase())[index] ===
+                    letter.value.toUpperCase()
+                      ? "green"
+                      : secretElement.name
+                          .toUpperCase()
+                          .includes(letter.value.toUpperCase())
+                      ? "yellow"
+                      : "grey",
+                })
+              ),
+            };
+          return prhase;
+        })
+      );
+
+      phrases[inputPhrase.index] = {};
 
       inputPhrase.value.toUpperCase() === secretElement.name.toUpperCase()
         ? setVictory(true)
@@ -93,6 +108,15 @@ const Game = ({
         ? setDefeat(true)
         : setInputPhrase({ value: "", index: ++inputPhrase.index });
     }
+  };
+
+  const reloadGame = () => {
+    dispatch(
+      setSecretElement(elements[Math.floor(Math.random() * elements.length)])
+    );
+    setPhrases(initialPhrases);
+    setInputPhrase(initialInputPhrase);
+    setDefeat(false);
   };
 
   const renderEvents = () => {
@@ -112,80 +136,65 @@ const Game = ({
   };
 
   const renderGame = () => {
-    if (secretElement?.id)
+    if (secretElement.id)
       return (
         <div className={"game"}>
           {victory ? (
             <>
-              <Alert color="success">¡FELICIDADES! Desbloqueaste: </Alert>
-              <ElementCard element={secretElement} win={true}></ElementCard>
+              <Alert color="success">¡VICTORIA! Desbloqueaste: </Alert>
+              <ElementCard element={secretElement}></ElementCard>
             </>
           ) : (
             <>
               {defeat ? (
-                <InputGroup>
-                  <Alert className="defeat" color="danger">
-                    DERROTA. Era {secretElement.name.toUpperCase()}
-                  </Alert>
-                  <Button
-                    color="danger"
-                    onClick={() => {
-                      dispatch(
-                        setSecretElement(
-                          elements[Math.floor(Math.random() * elements.length)]
-                        )
-                      );
-                      setPhrases(initialPhrases);
-                      setInputPhrase(initialInputPhrase);
-                      setDefeat(false);
-                    }}>
-                    <FontAwesomeIcon icon={faArrowRotateRight} />
-                  </Button>
-                </InputGroup>
+                <Defeat reloadGame={() => reloadGame} />
               ) : (
-                <InputGroup>
-                  <Input
-                    value={inputPhrase.value.toUpperCase()}
-                    onChange={(event) => {
-                      if (isValidInputPhrase(event.target.value)) {
-                        setInputPhrase({
-                          value: event.target.value,
-                          index: inputPhrase.index,
-                        });
-                        phrases[inputPhrase.index] = {
-                          letters: Array.from(event.target.value).map(
-                            (letter) => ({
-                              value: letter,
-                            })
-                          ),
-                        };
-                      }
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        comprobateVictory();
-                      }
-                    }}
-                  />
-                  <Button
-                    color="success"
-                    onClick={() => {
-                      comprobateVictory();
-                    }}>
-                    <FontAwesomeIcon icon={faPaperPlane} />
-                  </Button>
-                </InputGroup>
-              )}
+                <>
+                  <InputGroup>
+                    <Input
+                      value={inputPhrase.value.toUpperCase()}
+                      onChange={(event) => {
+                        if (isValidInputPhrase(event.target.value)) {
+                          setInputPhrase({
+                            value: event.target.value,
+                            index: inputPhrase.index,
+                          });
 
-              <div className="pt-2">
-                {phrases.map((p, index) => (
-                  <Phrase
-                    key={index}
-                    letters={p.letters}
-                    length={secretElement.name?.length}
-                  />
-                ))}
-              </div>
+                          setPhrases(
+                            phrases.map((prhase, index) => {
+                              if (index === inputPhrase.index)
+                                return {
+                                  letters: Array.from(event.target.value).map(
+                                    (letter) => ({
+                                      value: letter,
+                                    })
+                                  ),
+                                };
+                              return prhase;
+                            })
+                          );
+                        }
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          comprobateVictory();
+                        }
+                      }}
+                    />
+                    <Button color="danger" onClick={() => reloadGame()}>
+                      <FontAwesomeIcon icon={faArrowRotateRight} />
+                    </Button>
+                    <Button
+                      color="success"
+                      onClick={() => {
+                        comprobateVictory();
+                      }}>
+                      <FontAwesomeIcon icon={faPaperPlane} />
+                    </Button>
+                  </InputGroup>
+                </>
+              )}
+              <Grid phrases={phrases} />
             </>
           )}
         </div>
@@ -217,6 +226,7 @@ const mapDispatchToProps = {
   setCards,
   setAgents,
   setSecretElement,
+  setElementList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
