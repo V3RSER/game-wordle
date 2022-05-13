@@ -4,16 +4,14 @@ import { Button, FormGroup, Label, Input, Form, ButtonGroup } from "reactstrap";
 
 const Home = () => {
   const [checkAny, setCheckAny] = useState(true);
-  const [wordLength, setWordLength] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const [difficulty, setDifficulty] = useState(1);
   const [wordSource, setWordSource] = useState("cr");
 
   const navigate = useNavigate();
 
   const isValidLength = () => {
-    return (
-      (wordLength >= 0 && wordLength !== "" && wordLength < 20) ||
-      wordLength === 0
-    );
+    return (attempts >= 0 && attempts !== "" && attempts < 8) || attempts === 0;
   };
 
   return (
@@ -28,34 +26,48 @@ const Home = () => {
               setWordSource(event.target.value);
             }}>
             <option value="cr">Clash Royale</option>
-            {/* <option value="dictionary">Diccionario</option> */}
             <option value="valorant">Valorant</option>
           </Input>
         </FormGroup>
-        <Label>Longitud de palabra</Label>
+        <FormGroup>
+          <Label>Dificultad</Label>
+          <Input
+            type="select"
+            defaultValue={difficulty}
+            onChange={(event) => {
+              setDifficulty(event.target.value);
+            }}>
+            <option value="0">Fácil</option>
+            <option default value="1">
+              Normal
+            </option>
+            <option value="2">Difícil</option>
+          </Input>
+        </FormGroup>
+        <Label>Intentos</Label>
         <FormGroup>
           <ButtonGroup>
             {checkAny ? (
               <Input
                 className="left-input"
-                placeholder="Tamaño"
+                placeholder="Intentos"
                 type="text"
                 disabled
-                value="Cualquiera"
+                value="Defecto"
               />
             ) : (
               <Input
                 className="left-input"
                 placeholder="Tamaño"
                 type="number"
-                value={wordLength}
+                value={attempts}
                 invalid={!isValidLength()}
                 min={0}
                 onChange={(event) => {
                   if (event.target.value <= 0) {
                     setCheckAny(!checkAny);
                   }
-                  setWordLength(event.target.value);
+                  setAttempts(event.target.value);
                 }}
               />
             )}
@@ -67,7 +79,7 @@ const Home = () => {
               active={!checkAny}
               onClick={() => {
                 setCheckAny(!checkAny);
-                setWordLength(1);
+                setAttempts(1);
               }}>
               Personalizar
             </Button>
@@ -80,7 +92,7 @@ const Home = () => {
           size="lg"
           onClick={() => {
             if (isValidLength()) {
-              navigate(`${wordSource}/${wordLength}/${5}`);
+              navigate(`${wordSource}/${difficulty}/${attempts}`);
             }
           }}>
           Comenzar

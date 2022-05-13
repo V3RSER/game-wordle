@@ -21,6 +21,7 @@ export default function element(state = initialState, action) {
     case typeName.LOADED_FAILURE:
       return { ...state, loading: false, error: true };
     case typeName.SET_SECRET_ELEMENT:
+      console.log("------ Elemento: " + action.payload.name);
       return {
         ...state,
         secret: action.payload,

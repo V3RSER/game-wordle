@@ -28,15 +28,14 @@ export const setCards = () => async (dispatch) => {
     ).then((response) => {
       return response.json();
     });
-
     dispatch(
       loadedSuccess({
-        list: data1.map((card, index) => {
+        list: data2.map((card) => {
           return {
             id: card.id,
-            name: data2[index]._lang.name.es,
-            img: card.iconUrls.medium,
-            description: data2[index]._lang.description.es,
+            name: card._lang.name.es,
+            img: data1.filter((c) => c.id === card.id)[0].iconUrls.medium,
+            description: card._lang.description.es,
           };
         }),
       })

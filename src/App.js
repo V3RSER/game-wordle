@@ -10,7 +10,7 @@ function App() {
         <Routes>
           <Route path="/game-wordle/" element={<Home />} />
           <Route
-            path="/game-wordle/:category/:length/:attempts"
+            path="/game-wordle/:category/:difficulty/:attempts"
             element={<Game />}
           />
         </Routes>

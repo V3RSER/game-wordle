@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Alert, Button, Input, InputGroup, Spinner } from "reactstrap";
@@ -29,11 +29,14 @@ const Game = ({
 }) => {
   const params = useParams();
   const dispatch = useDispatch();
+  const [attempts, setAttempts] = useState(
+    params.attempts === "0" ? 5 : parseInt(params.attempts)
+  );
   let initialInputPhrase = {
     value: "",
     index: 0,
   };
-  let initialPhrases = [...Array(parseInt(params.attempts)).keys()].map(() => ({
+  let initialPhrases = [...Array(parseInt(attempts)).keys()].map(() => ({
     letters: [],
   }));
   const [inputPhrase, setInputPhrase] = useState(initialInputPhrase);
@@ -61,144 +64,152 @@ const Game = ({
     }
   }, [params.category, setAgents, setCards]);
 
+  const selectSecretElement = useCallback(() => {
+    let elementsFilter;
+    switch (params.difficulty) {
+      case "0":
+        elementsFilter = elements.filter(
+          (element) => element.name.length > 1 && element.name.length <= 5
+        );
+        break;
+      case "1":
+        elementsFilter = elements.filter(
+          (element) => element.name.length > 5 && element.name.length <= 10
+        );
+        break;
+      case "2":
+        elementsFilter = elements.filter((element) => element.name.length > 10);
+        break;
+      default:
+        elementsFilter = elements;
+    }
+    dispatch(
+      setSecretElement(
+        elementsFilter[Math.floor(Math.random() * elementsFilter.length)]
+      )
+    );
+  });
+
   useEffect(() => {
     if (elements.length && !loading && !secretElement?.id)
-      dispatch(
-        setSecretElement(elements[Math.floor(Math.random() * elements.length)])
-      );
-  }, [dispatch, elements, loading, secretElement?.id, setSecretElement]);
+      selectSecretElement();
+  }, [elements.length, loading, secretElement?.id, selectSecretElement]);
 
-  const isValidInputPhrase = (p) => {
+  function isValidInputPhrase(p) {
     return (
       p.length <= secretElement.name?.length &&
       p.split(" ").length <= secretElement.name?.split(" ").length
     );
+  }
+
+  const updatePrhases = () => {
+    setPhrases(
+      phrases.map((prhase, idx) => {
+        if (idx === inputPhrase.index)
+          return {
+            letters: phrases[inputPhrase.index].letters.map(
+              (letter, index) => ({
+                value: letter.value,
+                color:
+                  Array.from(secretElement.name.toUpperCase())[index] ===
+                  letter.value.toUpperCase()
+                    ? "green"
+                    : secretElement.name
+                        .toUpperCase()
+                        .includes(letter.value.toUpperCase())
+                    ? "yellow"
+                    : "grey",
+              })
+            ),
+          };
+        return prhase;
+      })
+    );
+    phrases[inputPhrase.index] = {};
   };
 
-  const comprobateVictory = () => {
+  function comprobateVictory() {
     if (inputPhrase.value.length === secretElement.name.length && !defeat) {
-      setPhrases(
-        phrases.map((prhase, idx) => {
-          if (idx === inputPhrase.index)
-            return {
-              letters: phrases[inputPhrase.index].letters.map(
-                (letter, index) => ({
-                  value: letter.value,
-                  color:
-                    Array.from(secretElement.name.toUpperCase())[index] ===
-                    letter.value.toUpperCase()
-                      ? "green"
-                      : secretElement.name
-                          .toUpperCase()
-                          .includes(letter.value.toUpperCase())
-                      ? "yellow"
-                      : "grey",
-                })
-              ),
-            };
-          return prhase;
-        })
-      );
-
-      phrases[inputPhrase.index] = {};
+      updatePrhases();
 
       inputPhrase.value.toUpperCase() === secretElement.name.toUpperCase()
         ? setVictory(true)
-        : inputPhrase.index === params.attempts - 1
+        : inputPhrase.index === attempts - 1
         ? setDefeat(true)
         : setInputPhrase({ value: "", index: ++inputPhrase.index });
     }
-  };
+  }
 
   const reloadGame = () => {
-    dispatch(
-      setSecretElement(elements[Math.floor(Math.random() * elements.length)])
-    );
+    selectSecretElement();
     setPhrases(initialPhrases);
     setInputPhrase(initialInputPhrase);
     setDefeat(false);
   };
 
-  const renderEvents = () => {
-    if (loading) {
-      return (
-        <Spinner
-          color="light"
-          className="text-center"
-          style={{ position: "absolute", left: "50%", top: "50%" }}>
-          Loading...
-        </Spinner>
-      );
-    }
-    if (error) {
-      return <Alert color="danger">Error</Alert>;
-    }
-  };
-
   const renderGame = () => {
-    if (secretElement.id)
-      return (
-        <div className={"game"}>
-          {victory ? (
-            <>
-              <Alert color="success">¡VICTORIA! Desbloqueaste: </Alert>
-              <ElementCard element={secretElement}></ElementCard>
-            </>
-          ) : (
-            <>
-              {defeat ? (
-                <Defeat reloadGame={() => reloadGame} />
-              ) : (
-                <>
-                  <InputGroup>
-                    <Input
-                      value={inputPhrase.value.toUpperCase()}
-                      onChange={(event) => {
-                        if (isValidInputPhrase(event.target.value)) {
-                          setInputPhrase({
-                            value: event.target.value,
-                            index: inputPhrase.index,
-                          });
+    return (
+      <div className={"game"}>
+        {victory ? (
+          <>
+            <Alert color="success">¡VICTORIA! Desbloqueaste: </Alert>
+            <ElementCard element={secretElement}></ElementCard>
+          </>
+        ) : (
+          <>
+            {defeat ? (
+              <Defeat reloadGame={() => reloadGame} />
+            ) : (
+              <>
+                <InputGroup>
+                  <Input
+                    value={inputPhrase.value.toUpperCase()}
+                    onChange={(event) => {
+                      if (isValidInputPhrase(event.target.value)) {
+                        setInputPhrase({
+                          value: event.target.value,
+                          index: inputPhrase.index,
+                        });
 
-                          setPhrases(
-                            phrases.map((prhase, index) => {
-                              if (index === inputPhrase.index)
-                                return {
-                                  letters: Array.from(event.target.value).map(
-                                    (letter) => ({
-                                      value: letter,
-                                    })
-                                  ),
-                                };
-                              return prhase;
-                            })
-                          );
-                        }
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          comprobateVictory();
-                        }
-                      }}
-                    />
-                    <Button color="danger" onClick={() => reloadGame()}>
-                      <FontAwesomeIcon icon={faArrowRotateRight} />
-                    </Button>
-                    <Button
-                      color="success"
-                      onClick={() => {
+                        setPhrases(
+                          phrases.map((prhase, index) => {
+                            if (index === inputPhrase.index)
+                              return {
+                                letters: Array.from(event.target.value).map(
+                                  (letter) => ({
+                                    value: letter,
+                                  })
+                                ),
+                              };
+                            return prhase;
+                          })
+                        );
+                      }
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
                         comprobateVictory();
-                      }}>
-                      <FontAwesomeIcon icon={faPaperPlane} />
-                    </Button>
-                  </InputGroup>
-                </>
-              )}
-              <Grid phrases={phrases} />
-            </>
-          )}
-        </div>
-      );
+                      }
+                    }}
+                  />
+                  <Button color="danger" onClick={() => reloadGame()}>
+                    <FontAwesomeIcon icon={faArrowRotateRight} />
+                  </Button>
+                  <Button
+                    color="success"
+                    onClick={() => {
+                      comprobateVictory();
+                    }}>
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                  </Button>
+                </InputGroup>
+              </>
+            )}
+            <Grid phrases={phrases} />
+          </>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -208,8 +219,20 @@ const Game = ({
           backgroundImage: `url(${process.env.PUBLIC_URL}/img/${params.category}.jpg`,
         }}
         className={"background"}>
-        {renderGame()}
-        {renderEvents()}
+        {secretElement.id && renderGame()}
+        {loading && (
+          <Spinner
+            color="light"
+            className="text-center"
+            style={{ margin: "auto" }}>
+            Loading...
+          </Spinner>
+        )}
+        {error && (
+          <Alert color="danger" style={{ margin: "auto" }}>
+            Error
+          </Alert>
+        )}
       </div>
     </>
   );
