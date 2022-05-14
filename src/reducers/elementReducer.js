@@ -7,7 +7,7 @@ const initialState = {
   secret: {},
 };
 
-export default function element(state = initialState, action) {
+export default function elementReducer(state = initialState, action) {
   switch (action.type) {
     case typeName.LOADING:
       return { ...state, loading: true };

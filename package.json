@@ -1,8 +1,8 @@
 {
-  "name": "game-wordle",
+  "name": "secret-card",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://v3rser.github.io/game-wordle",
+  "homepage": "https://v3rser.github.io/secret-card",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",

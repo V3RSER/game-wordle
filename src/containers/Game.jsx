@@ -88,7 +88,7 @@ const Game = ({
         elementsFilter[Math.floor(Math.random() * elementsFilter.length)]
       )
     );
-  });
+  }, [dispatch, elements, params.difficulty, setSecretElement]);
 
   useEffect(() => {
     if (elements.length && !loading && !secretElement?.id)

@@ -15,8 +15,6 @@ body {
 
 .phrase {
   display: grid;
-
-  /* grid-gap: 10px; */
 }
 
 .phrase > * {
@@ -94,4 +92,67 @@ body {
   width: 1%;
   margin: 0;
   padding: 0.375rem;
+}
+
+.home-content {
+  padding-top: 68px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.shadow {
+  box-shadow: -20pt 40pt 50pt 0 rgb(0 0 0 / 35%) !important;
+}
+.menu-background {
+  color: white;
+  padding: 0;
+  border-radius: 1px;
+  /* box-shadow: 0 40pt 50pt 0 rgb(0 0 0 / 35%); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.menu-background .content {
+  height: 100%;
+  background-color: #0a010191;
+  padding: 2rem;
+}
+
+@media (min-width: 768px) {
+  .content {
+    min-height: 70vh;
+  }
+}
+
+.menu .content {
+  background-color: #fffffffb;
+  padding: 2rem;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bg-black-trasparent {
+  background-color: #00000077;
+}
+
+.btn-nav {
+  color: white;
+  background: transparent;
+  border: 0px;
+}
+
+.btn-nav:hover {
+  color: rgba(255, 255, 255, 0.671);
+  border-radius: 0%;
 }
