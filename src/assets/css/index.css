@@ -133,10 +133,6 @@ body {
   .home-content {
     height: 100%;
   }
-
-  .bg-black-trasparent {
-    background-color: #00000077;
-  }
 }
 
 .menu .content {
@@ -151,7 +147,7 @@ video {
 }
 
 .bg-black-trasparent {
-  background-color: #000000;
+  background-color: #00000077;
 }
 
 .btn-nav {
