@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/game-wordle/static/css/main.cbca2cda.css",
-    "main.js": "/game-wordle/static/js/main.a8915277.js",
-    "index.html": "/game-wordle/index.html",
-    "main.cbca2cda.css.map": "/game-wordle/static/css/main.cbca2cda.css.map",
-    "main.a8915277.js.map": "/game-wordle/static/js/main.a8915277.js.map"
+    "main.css": "/secret-card/static/css/main.d712ff39.css",
+    "main.js": "/secret-card/static/js/main.0f3c360e.js",
+    "index.html": "/secret-card/index.html",
+    "main.d712ff39.css.map": "/secret-card/static/css/main.d712ff39.css.map",
+    "main.0f3c360e.js.map": "/secret-card/static/js/main.0f3c360e.js.map"
   },
   "entrypoints": [
-    "static/css/main.cbca2cda.css",
-    "static/js/main.a8915277.js"
+    "static/css/main.d712ff39.css",
+    "static/js/main.0f3c360e.js"
   ]
 }
