@@ -20,7 +20,7 @@ const Header = () => {
         expand="md"
         fixed="top"
         light>
-        <NavbarBrand href={process.env.PUBLIC_URL} style={{ padding: 0 }}>
+        <NavbarBrand href={""} style={{ padding: 0 }}>
           <img
             src={`${process.env.PUBLIC_URL}/svg/logo_1.svg`}
             width="100"
@@ -38,14 +38,12 @@ const Header = () => {
             <button
               className="btn-nav"
               onClick={() => {
-                navigate(process.env.PUBLIC_URL);
+                navigate("/");
               }}>
               <FontAwesomeIcon icon={faHouse} />
             </button>
           </Nav>
-          <NavLink
-            className="navbar-brand"
-            to={`${process.env.PUBLIC_URL}/profile`}>
+          <NavLink className="navbar-brand" to={"/profile"}>
             Perfil
           </NavLink>
         </Collapse>

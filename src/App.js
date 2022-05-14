@@ -9,11 +9,8 @@ function App() {
       <Header />
       <div className="cover-container d-flex h-100 mx-auto flex-column">
         <Routes>
-          <Route path={process.env.PUBLIC_URL} element={<Home />} />
-          <Route
-            path={`${process.env.PUBLIC_URL}/:category/:difficulty/:attempts`}
-            element={<Game />}
-          />
+          <Route path={"/"} element={<Home />} />
+          <Route path={"/:category/:difficulty/:attempts"} element={<Game />} />
         </Routes>
       </div>
     </HashRouter>

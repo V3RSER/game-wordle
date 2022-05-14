@@ -31,7 +31,7 @@ const ElementCard = ({ element }) => {
           color="success"
           block
           onClick={() => {
-            navigate(process.env.PUBLIC_URL);
+            navigate("/");
             dispatch(setSecretElement({}));
           }}>
           Continuar
