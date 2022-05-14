@@ -12,7 +12,6 @@ import reducer from "./reducers/rootReducer";
 
 import { composeWithDevTools } from "redux-devtools-extension";
 
-console.log(process.env.PUBLIC_URL);
 const middleware = [thunk];
 if (process.env.NODE_ENV !== "production") {
   middleware.push(createLogger());

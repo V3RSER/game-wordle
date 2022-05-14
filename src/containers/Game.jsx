@@ -8,10 +8,10 @@ import {
   faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  setCards,
-  setSecretElement,
-  setAgents,
-  setElementList,
+  setCards as setCardsAction,
+  setSecretElement as setSecretElementAction,
+  setAgents as setAgentsAction,
+  setElementList as setElementListAction,
 } from "../actions/elementActions";
 import ElementCard from "../components/ElementCard";
 import Defeat from "../components/Defeat";
@@ -246,10 +246,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setCards,
-  setAgents,
-  setSecretElement,
-  setElementList,
+  setCards: setCardsAction,
+  setAgents: setAgentsAction,
+  setSecretElement: setSecretElementAction,
+  setElementList: setElementListAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
