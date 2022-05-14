@@ -1,4 +1,4 @@
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -38,14 +38,20 @@ const Header = () => {
             <button
               className="btn-nav"
               onClick={() => {
+                setCollapsed(true);
                 navigate("/");
               }}>
               <FontAwesomeIcon icon={faHouse} />
             </button>
+            <button
+              className="btn-nav"
+              onClick={() => {
+                setCollapsed(true);
+                navigate("/profile");
+              }}>
+              <FontAwesomeIcon icon={faAddressCard} />
+            </button>
           </Nav>
-          <NavLink className="navbar-brand" to={"/profile"}>
-            Perfil
-          </NavLink>
         </Collapse>
       </Navbar>
     </header>

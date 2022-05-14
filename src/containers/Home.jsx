@@ -125,7 +125,7 @@ const Home = () => {
       <video muted loop preload="auto" autoPlay>
         <source
           type="video/webm"
-          src={`${process.env.PUBLIC_URL}/img/background.webm`}
+          src={`${process.env.PUBLIC_URL}/img/background_home_1.webm`}
         />
       </video>
       {renderMenu()}

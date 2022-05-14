@@ -14,7 +14,6 @@ import {
   setElementList as setElementListAction,
 } from "../actions/elementActions";
 import ElementCard from "../components/ElementCard";
-import Defeat from "../components/Defeat";
 import Grid from "../components/Grid";
 
 const Game = ({
@@ -158,7 +157,14 @@ const Game = ({
         ) : (
           <>
             {defeat ? (
-              <Defeat reloadGame={() => reloadGame} />
+              <InputGroup>
+                <Alert className="defeat" color="danger">
+                  DERROTA. Era: {secretElement.name.toUpperCase()}
+                </Alert>
+                <Button color="danger" onClick={() => reloadGame()}>
+                  <FontAwesomeIcon icon={faArrowRotateRight} />
+                </Button>
+              </InputGroup>
             ) : (
               <>
                 <InputGroup>
