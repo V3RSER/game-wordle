@@ -98,7 +98,7 @@ body {
   padding-top: 68px;
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: auto;
   top: 0;
   display: flex;
   flex-direction: column;
@@ -129,6 +129,14 @@ body {
   .content {
     min-height: 70vh;
   }
+
+  .home-content {
+    height: 100%;
+  }
+
+  .bg-black-trasparent {
+    background-color: #00000077;
+  }
 }
 
 .menu .content {
@@ -143,7 +151,7 @@ video {
 }
 
 .bg-black-trasparent {
-  background-color: #00000077;
+  background-color: #000000;
 }
 
 .btn-nav {

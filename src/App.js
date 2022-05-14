@@ -8,22 +8,20 @@ function App() {
   return (
     <HashRouter>
       <Header />
-      <div className="cover-container d-flex h-100 mx-auto flex-column">
-        <Routes>
-          <Route path={"/"} element={<Home />} />
-          <Route path={"/:category/:difficulty/:attempts"} element={<Game />} />
-          <Route
-            path={"/profile"}
-            element={<Generic message={"PRÓXIMAMENTE"} />}
-          />
-          <Route
-            path={"*"}
-            element={
-              <Generic error={"Error 404"} message={"Página no encontrada"} />
-            }
-          />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path={"/"} element={<Home />} />
+        <Route path={"/:category/:difficulty/:attempts"} element={<Game />} />
+        <Route
+          path={"/profile"}
+          element={<Generic message={"PRÓXIMAMENTE"} />}
+        />
+        <Route
+          path={"*"}
+          element={
+            <Generic error={"Error 404"} message={"Página no encontrada"} />
+          }
+        />
+      </Routes>
     </HashRouter>
   );
 }

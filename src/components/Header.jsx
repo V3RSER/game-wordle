@@ -1,7 +1,7 @@
 import { faAddressCard, faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse } from "reactstrap";
 
