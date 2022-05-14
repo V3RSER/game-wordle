@@ -1,11 +1,11 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Game from "./containers/Game";
 import Home from "./containers/Home";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Header />
       <div className="cover-container d-flex h-100 mx-auto flex-column">
         <Routes>
@@ -16,7 +16,7 @@ function App() {
           />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
