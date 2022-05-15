@@ -39,6 +39,7 @@ const Game = ({
     letters: [],
   }));
   const [inputPhrase, setInputPhrase] = useState(initialInputPhrase);
+  const [visiblePhrase, setVisiblePhrase] = useState([]);
   const [phrases, setPhrases] = useState(initialPhrases);
   const [victory, setVictory] = useState(false);
   const [defeat, setDefeat] = useState(false);
@@ -82,11 +83,20 @@ const Game = ({
       default:
         elementsFilter = elements;
     }
-    dispatch(
-      setSecretElement(
-        elementsFilter[Math.floor(Math.random() * elementsFilter.length)]
-      )
-    );
+    let randIndex = Math.floor(Math.random() * elementsFilter.length);
+    dispatch(setSecretElement(elementsFilter[randIndex]));
+    setVisiblePhrase([
+      {
+        letters: [...Array(elementsFilter[randIndex].name.length).keys()].map(
+          (index) => ({
+            value: elementsFilter[randIndex].name[index],
+            color:
+              elementsFilter[randIndex].name[index] === " " ? "black" : "white",
+            hidden: true,
+          })
+        ),
+      },
+    ]);
   }, [dispatch, elements, params.difficulty, setSecretElement]);
 
   useEffect(() => {
@@ -106,8 +116,30 @@ const Game = ({
       phrases.map((prhase, idx) => {
         if (idx === inputPhrase.index)
           return {
-            letters: phrases[inputPhrase.index].letters.map(
-              (letter, index) => ({
+            letters: phrases[inputPhrase.index].letters.map((letter, index) => {
+              // Modificar frase visible
+              if (
+                Array.from(secretElement.name.toUpperCase())[index] ===
+                letter.value.toUpperCase()
+              ) {
+                setVisiblePhrase([
+                  {
+                    letters: visiblePhrase[0].letters.map((let1, idx1) => {
+                      if (index === idx1) {
+                        return {
+                          value: let1.value,
+                          color: let1.color,
+                          hidden: false,
+                        };
+                      }
+
+                      return let1;
+                    }),
+                  },
+                ]);
+              }
+
+              return {
                 value: letter.value,
                 color:
                   Array.from(secretElement.name.toUpperCase())[index] ===
@@ -118,8 +150,8 @@ const Game = ({
                         .includes(letter.value.toUpperCase())
                     ? "yellow"
                     : "grey",
-              })
-            ),
+              };
+            }),
           };
         return prhase;
       })
@@ -148,26 +180,22 @@ const Game = ({
 
   const renderGame = () => {
     return (
-      <div className={"game"}>
-        {victory ? (
-          <>
-            <Alert color="success">¡VICTORIA! Desbloqueaste: </Alert>
-            <ElementCard element={secretElement}></ElementCard>
-          </>
-        ) : (
-          <>
-            {defeat ? (
-              <InputGroup>
-                <Alert className="defeat" color="danger">
-                  DERROTA. Era: {secretElement.name.toUpperCase()}
-                </Alert>
-                <Button color="danger" onClick={() => reloadGame()}>
-                  <FontAwesomeIcon icon={faArrowRotateRight} />
-                </Button>
-              </InputGroup>
-            ) : (
-              <>
-                <InputGroup>
+      <>
+        <div className={"game"}>
+          {victory ? (
+            <>
+              <Alert color="success">¡VICTORIA! Desbloqueaste: </Alert>
+              <ElementCard element={secretElement}></ElementCard>
+            </>
+          ) : (
+            <>
+              <Grid phrases={visiblePhrase} />
+              <InputGroup className="py-2">
+                {defeat ? (
+                  <Alert className="defeat" color="danger">
+                    DERROTA. Era: {secretElement.name.toUpperCase()}
+                  </Alert>
+                ) : (
                   <Input
                     value={inputPhrase.value.toUpperCase()}
                     onChange={(event) => {
@@ -198,23 +226,23 @@ const Game = ({
                       }
                     }}
                   />
-                  <Button color="danger" onClick={() => reloadGame()}>
-                    <FontAwesomeIcon icon={faArrowRotateRight} />
-                  </Button>
-                  <Button
-                    color="success"
-                    onClick={() => {
-                      comprobateVictory();
-                    }}>
-                    <FontAwesomeIcon icon={faPaperPlane} />
-                  </Button>
-                </InputGroup>
-              </>
-            )}
-            <Grid phrases={phrases} />
-          </>
-        )}
-      </div>
+                )}
+                <Button color="danger" onClick={() => reloadGame()}>
+                  <FontAwesomeIcon icon={faArrowRotateRight} />
+                </Button>
+                <Button
+                  color="success"
+                  onClick={() => {
+                    comprobateVictory();
+                  }}>
+                  <FontAwesomeIcon icon={faPaperPlane} />
+                </Button>
+              </InputGroup>
+              <Grid phrases={phrases} />
+            </>
+          )}
+        </div>
+      </>
     );
   };
 

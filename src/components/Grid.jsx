@@ -4,7 +4,7 @@ import Phrase from "./Phrase";
 
 const Grid = ({ phrases, secretElement }) => {
   return (
-    <div className="pt-2">
+    <div>
       {phrases.map((p, index) => (
         <Phrase
           key={index}

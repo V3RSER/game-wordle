@@ -18,13 +18,13 @@ const ElementCard = ({ element }) => {
 
   return (
     <Card className="element-card">
-      <CardImg alt={element.name} src={element.img} top width="100%" />
+      <CardImg alt={element.displayName} src={element.img} top width="100%" />
       <CardBody>
         <CardTitle tag="h3">{element.name.toUpperCase()}</CardTitle>
         <CardSubtitle className="mb-2 text-muted" tag="h6"></CardSubtitle>
         <CardText>
-          {element.description.length > 270
-            ? element.description.length.substring(0, 270) + "..."
+          {element.description.length > 250
+            ? element.description.length.substring(0, 250) + "..."
             : element.description}
         </CardText>
         <Button

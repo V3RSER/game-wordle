@@ -50,6 +50,11 @@ body {
   background-color: #ddddddd8;
 }
 
+.phrase .black {
+  background-color: #0000008a;
+  border: 0pt;
+}
+
 .game {
   background-color: rgba(0, 0, 0, 0.507);
   margin: auto;

@@ -1,12 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, FormGroup, Input, Form, ButtonGroup } from "reactstrap";
+import ComboBoxFilter from "../components/ComboBoxFilter";
 
 const Home = () => {
   const [checkAny, setCheckAny] = useState(true);
   const [attempts, setAttempts] = useState(0);
-  const [difficulty, setDifficulty] = useState(1);
-  const [wordSource, setWordSource] = useState("cr");
+
+  const [wordSource, setWordSource] = useState({
+    value: "cr",
+    options: {
+      source: [
+        { name: "Clash Royale", value: "cr" },
+        { name: "Valorant", value: "valorant" },
+      ],
+    },
+  });
+
+  const [difficulty, setDifficulty] = useState({
+    value: 1,
+    options: {
+      cr: [
+        { name: "Fácil", value: 0 },
+        { name: "Normal", value: 1 },
+        { name: "Difícil", value: 2 },
+      ],
+      valorant: [
+        { name: "Fácil", value: 0 },
+        { name: "Normal", value: 1 },
+      ],
+    },
+  });
 
   const navigate = useNavigate();
 
@@ -21,7 +45,7 @@ const Home = () => {
           <div
             className="col-md-6 menu-background"
             style={{
-              backgroundImage: `url(${process.env.PUBLIC_URL}/img/${wordSource}_home.jpg`,
+              backgroundImage: `url(${process.env.PUBLIC_URL}/img/${wordSource.value}_home.jpg`,
             }}>
             <div className="content">
               <h2 className="pb-3">INFORMACIÓN</h2>
@@ -35,30 +59,21 @@ const Home = () => {
                 <FormGroup>
                   <h2 className="pb-3">OPCIONES</h2>
                   <h5>Fuente del personaje</h5>
-                  <Input
-                    type="select"
-                    defaultValue={wordSource}
-                    onChange={(event) => {
-                      setWordSource(event.target.value);
-                    }}>
-                    <option value="cr">Clash Royale</option>
-                    <option value="valorant">Valorant</option>
-                  </Input>
+                  <ComboBoxFilter
+                    defaultValue={wordSource.value}
+                    state={wordSource}
+                    setState={setWordSource}
+                    source={"source"}
+                  />
                 </FormGroup>
                 <FormGroup>
                   <h5>Dificultad</h5>
-                  <Input
-                    type="select"
-                    defaultValue={difficulty}
-                    onChange={(event) => {
-                      setDifficulty(event.target.value);
-                    }}>
-                    <option value="0">Fácil</option>
-                    <option default value="1">
-                      Normal
-                    </option>
-                    <option value="2">Difícil</option>
-                  </Input>
+                  <ComboBoxFilter
+                    defaultValue={difficulty.value}
+                    state={difficulty}
+                    setState={setDifficulty}
+                    source={wordSource.value}
+                  />
                 </FormGroup>
                 <h5>Intentos</h5>
                 <FormGroup>
@@ -108,7 +123,9 @@ const Home = () => {
                   size="lg"
                   onClick={() => {
                     if (isValidLength()) {
-                      navigate(`${wordSource}/${difficulty}/${attempts}`);
+                      navigate(
+                        `${wordSource.value}/${difficulty.value}/${attempts}`
+                      );
                     }
                   }}>
                   Comenzar

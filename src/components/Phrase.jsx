@@ -1,6 +1,9 @@
 import React from "react";
 
-const Phrase = ({ letters = [{ value: "", color: "" }], length = 1 }) => {
+const Phrase = ({
+  letters = [{ value: "", color: "", hidden: false }],
+  length = 1,
+}) => {
   return (
     <>
       <div
@@ -14,7 +17,7 @@ const Phrase = ({ letters = [{ value: "", color: "" }], length = 1 }) => {
             className={`letter ${
               letters[index]?.color ? letters[index].color : "white"
             }`}>
-            {letters[index]?.value.toUpperCase()}
+            {!letters[index]?.hidden && letters[index]?.value.toUpperCase()}
           </h1>
         ))}
       </div>
